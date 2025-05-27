@@ -1,12 +1,13 @@
+"use client"
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import { twMerge } from "tailwind-merge";
 import useDataStore from "@/store/useDataStore";
 import tokenManager from "@/api/tokenManager";
+import { useRouter } from "next/navigation";
 
 const schema = z.object({
   username: z.string().min(3),

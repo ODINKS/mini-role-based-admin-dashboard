@@ -53,20 +53,20 @@ const Button: React.FC<ButtonProps> = ({
 
   const hoverStyles = disableHover
     ? ""
-    : `transition ease-in-out duration-300 hover:opacity-60`;
+    : `transition ease-in-out duration-300 hover:opacity-60 hover:bg-blue-600`;
 
   const baseStyles = [
-    `flex justify-center text-sm items-center gap-2 rounded-small border font-semibold w-full py-[0.875rem] px-4 cursor-pointer`,
+    `flex justify-center text-sm items-center gap-2 rounded-lg border font-semibold w-full py-3 px-4 cursor-pointer duration-300 ease-in-out`,
     hoverStyles,
   ];
 
   const buttonTypeStyles: Record<string, string> = {
-    primary: "bg-blue-500 text-white border-transparent hover:bg-blue-600", // Blue primary button
+    primary: "bg-blue-500 text-white border-transparent hover:bg-blue-600",
     outline:
-      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem] hover:bg-blue-100 dark:hover:bg-blue-700", // Blue outline button
+      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem] hover:bg-blue-100 dark:hover:bg-blue-700",
     ghost:
-      "bg-transparent text-blue-500 w-auto border-transparent !p-0 hover:bg-blue-100 dark:hover:bg-blue-700", // Transparent ghost button
-    onlyIcon: "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent", // Icon-only button
+      "bg-transparent text-blue-500 w-auto border-transparent !p-0 hover:bg-blue-100 dark:hover:bg-blue-700",
+    onlyIcon: "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent",
   };
 
   const mergedClassNames = twMerge(
