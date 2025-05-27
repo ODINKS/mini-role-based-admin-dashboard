@@ -44,7 +44,7 @@ const Button: React.FC<ButtonProps> = ({
   rightIcon,
   type = "button",
   disableHover,
-  buttonType = "default",
+  buttonType = "primary",
   onlyIcon = false,
 }) => {
   const content = isLoading ? <Spinner /> : onlyIcon ? null : label;
@@ -57,16 +57,16 @@ const Button: React.FC<ButtonProps> = ({
 
   const baseStyles = [
     `flex justify-center text-sm items-center gap-2 rounded-small border font-semibold w-full py-[0.875rem] px-4 cursor-pointer`,
-
     hoverStyles,
   ];
 
   const buttonTypeStyles: Record<string, string> = {
-    primary: "bg-blue-500 text-white border-transparent",
+    primary: "bg-blue-500 text-white border-transparent hover:bg-blue-600", // Blue primary button
     outline:
-      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem]",
-    ghost: "bg-transparent text-blue-500 w-auto border-transparent !p-0",
-    onlyIcon: "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent",
+      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem] hover:bg-blue-100 dark:hover:bg-blue-700", // Blue outline button
+    ghost:
+      "bg-transparent text-blue-500 w-auto border-transparent !p-0 hover:bg-blue-100 dark:hover:bg-blue-700", // Transparent ghost button
+    onlyIcon: "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent", // Icon-only button
   };
 
   const mergedClassNames = twMerge(
@@ -74,7 +74,7 @@ const Button: React.FC<ButtonProps> = ({
       ...baseStyles,
       buttonTypeStyles[buttonType] ?? "",
       classNames,
-      isDisabled ? "bg-primary-20" : "",
+      isDisabled ? "bg-gray-200 cursor-not-allowed" : "",
     ].join(" ")
   );
 

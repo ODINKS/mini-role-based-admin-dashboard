@@ -5,12 +5,19 @@ interface User {
   role: "admin" | "editor" | null;
 }
 
+export interface Post {
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}
+
 interface Store {
   user: User | null;
-  posts: unknown[];
+  posts: Post[];
   darkMode: boolean;
   setUser: (user: User | null) => void;
-  setPosts: (posts: unknown[]) => void;
+  setPosts: (posts: Post[]) => void;
   toggleDarkMode: () => void;
 }
 
