@@ -156,7 +156,7 @@ const DashboardHome = () => {
         {/* Pie Chart */}
         <section className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-medium mb-4 text-gray-800">
-            Posts Distribution by User
+            Posts Distribution by User (Pie Chart)
           </h2>
           <ResponsiveContainer width="100%" height={320}>
             <PieChart>
