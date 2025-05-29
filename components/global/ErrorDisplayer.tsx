@@ -11,7 +11,12 @@ function ErrorDisplayer({
   return (
     <>
       {error && (
-        <p className={twMerge("text-red-500 text-xs mt-1", className)}>
+        <p
+          className={twMerge(
+            "text-red-500 dark:text-red-400 text-xs mt-1",
+            className
+          )}
+        >
           {error}
         </p>
       )}

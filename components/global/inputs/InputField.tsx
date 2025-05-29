@@ -115,11 +115,11 @@ const InputField: React.FC<InputFieldProps> = ({
               onInput={onInput}
               disabled={disabled}
               className={twMerge(
-                "w-6 h-6 peer cursor-pointer checked:bg-blue-600 appearance-none border border-gray-300 rounded-[6px]",
+                "w-6 h-6 peer cursor-pointer checked:bg-blue-600 appearance-none border border-gray-300 rounded-[6px] dark:border-gray-600 dark:bg-gray-800 dark:checked:bg-blue-500",
                 classNames
               )}
             />
-            <FiCheck className="absolute left-1.5 top-[7px] opacity-0 peer-checked:opacity-100 pointer-events-none" />
+            <FiCheck className="absolute left-1.5 top-[7px] opacity-0 peer-checked:opacity-100 pointer-events-none text-white" />
           </div>
         );
 
@@ -127,7 +127,6 @@ const InputField: React.FC<InputFieldProps> = ({
         return (
           <div className="flex items-center">
             <div className="relative inline-block w-12 h-6 mr-2 align-middle select-none">
-              {/* Toggle Thumb */}
               <input
                 id={id}
                 name={name}
@@ -140,22 +139,23 @@ const InputField: React.FC<InputFieldProps> = ({
                 disabled={disabled}
                 className={`absolute left-0 top-1/2 -translate-y-1/2 w-[22px] h-[22px] rounded-full border border-gray-300 shadow-sm appearance-none cursor-pointer transition-transform duration-300 ${
                   thumbColor ? thumbColor : "bg-white"
-                } ${value ? "translate-x-6" : "translate-x-0"}`}
+                } ${
+                  value ? "translate-x-6" : "translate-x-0"
+                } dark:border-gray-600 dark:bg-gray-700`}
               />
-
-              {/* Toggle Track */}
               <label
                 htmlFor={name || id}
-                className={`block w-12 h-6 rounded-full transition-colors duration-300 cursor-pointer`}
+                className={`block w-12 h-6 rounded-full transition-colors duration-300 cursor-pointer dark:bg-gray-700`}
                 style={{
-                  backgroundColor: value
-                    ? trackColorChecked // default blue-500
-                    : trackColor, // default gray-300
+                  backgroundColor: value ? trackColorChecked : trackColor,
                 }}
-              ></label>
+              />
             </div>
             {switchLabel && (
-              <label htmlFor={name} className="text-sm text-gray-900">
+              <label
+                htmlFor={name}
+                className="text-sm text-gray-900 dark:text-gray-300"
+              >
                 {switchLabel}
               </label>
             )}
@@ -171,13 +171,12 @@ const InputField: React.FC<InputFieldProps> = ({
             } cursor-pointer space-x-2`}
           >
             <div className="relative">
-              {/* Input field set to hidden using sr-only */}
               <input
                 type="radio"
                 id={id}
                 name={name}
-                value={id} // use `id` as the radio's own value
-                checked={value === id} // compare to the selected value
+                value={id}
+                checked={value === id}
                 onChange={onChange}
                 onBlur={onBlur}
                 onFocus={onFocus}
@@ -186,8 +185,6 @@ const InputField: React.FC<InputFieldProps> = ({
                 disabled={disabled}
                 className="sr-only"
               />
-
-              {/* Outer circle */}
               <div
                 className={twMerge(
                   `w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ease-in-out ${
@@ -196,7 +193,6 @@ const InputField: React.FC<InputFieldProps> = ({
                   outerRadioStyles
                 )}
               >
-                {/* Inner circle */}
                 <div
                   className={twMerge(
                     `w-2.5 h-2.5 rounded-full transition-colors duration-200 ${
@@ -207,13 +203,17 @@ const InputField: React.FC<InputFieldProps> = ({
                 />
               </div>
             </div>
-            {/* Label */}
-            {label && <span className="text-sm text-gray-900">{label}</span>}
+            {label && (
+              <span className="text-sm text-gray-900 dark:text-gray-300">
+                {label}
+              </span>
+            )}
             {radioLabel && (
-              <label className="text-blue-500 font-medium ">{radioLabel}</label>
+              <label className="text-blue-500 font-medium">{radioLabel}</label>
             )}
           </label>
         );
+
       default:
         return (
           <div className="w-full relative">
@@ -238,8 +238,10 @@ const InputField: React.FC<InputFieldProps> = ({
               disabled={disabled}
               autoFocus={autoFocus}
               className={twMerge(
-                `w-full px-5 py-4 rounded-lg text-black focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-gray-400 placeholder:text-sm text-sm bg-gray-100`,
-                error ? "border border-red-500 bg-red-50" : "border-gray-300",
+                `w-full px-5 py-4 rounded-lg text-black placeholder:text-gray-400 placeholder:text-sm text-sm bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-gray-200 dark:placeholder:text-gray-400`,
+                error
+                  ? "border border-red-500 bg-red-50 dark:bg-red-900"
+                  : "border border-gray-300 dark:border-gray-600",
                 classNames
               )}
               ref={ref}
@@ -251,13 +253,13 @@ const InputField: React.FC<InputFieldProps> = ({
               <button
                 type="button"
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400"
               >
                 {isPasswordVisible ? <FiEyeOff /> : <FiEye />}
               </button>
             )}
             {type === "email" && (
-              <LetterIcon className="absolute right-3 top-1/2 transform -translate-y-1/2" />
+              <LetterIcon className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
             )}
           </div>
         );
@@ -278,7 +280,9 @@ const InputField: React.FC<InputFieldProps> = ({
         type !== "switch" && (
           <label
             htmlFor={name}
-            className={twMerge("block text-sm text-gray-900 mb-2")}
+            className={twMerge(
+              "block text-sm text-gray-900 dark:text-gray-300 mb-2"
+            )}
           >
             {label}
             {required && <span className="text-red-500 ml-0.5">*</span>}
@@ -293,7 +297,7 @@ const InputField: React.FC<InputFieldProps> = ({
             className={twMerge(
               `absolute left-[13px] transition-all text-sm px-1 rounded-md`,
               shouldShrink
-                ? "-top-2.5 text-black bg-white"
+                ? " -top-2.5 text-black bg-white dark:text-gray-300 dark:bg-gray-800"
                 : "top-5 text-gray-400 !bg-inherit",
               collasedLabelStyles
             )}
