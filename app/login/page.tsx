@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "react-toastify";
@@ -8,27 +8,50 @@ import { twMerge } from "tailwind-merge";
 import useDataStore from "@/store/useDataStore";
 import tokenManager from "@/api/tokenManager";
 import { useRouter } from "next/navigation";
+import InputField from "@/components/global/inputs/InputField";
+import Button from "@/components/global/Button";
 
+// Zod validation schema with updated password rules
 const schema = z.object({
-  username: z.string().min(3),
-  password: z.string().min(6),
+  username: z
+    .string()
+    .min(3, "Username must be at least 3 characters long")
+    .max(20, "Username cannot be longer than 20 characters"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters long")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(
+      /[^A-Za-z0-9]/,
+      "Password must contain at least one special character"
+    )
+    .max(50, "Password cannot be longer than 50 characters"),
 });
 
 type FormData = z.infer<typeof schema>;
 
 const MOCK_USERS = [
-  { username: "admin", password: "admin123", role: "admin" },
-  { username: "editor", password: "editor123", role: "editor" },
+  { username: "admin", password: "Admin123.", role: "admin" },
+  { username: "editor", password: "Editor123.", role: "editor" },
 ];
 
 const LoginPage = () => {
   const setUser = useDataStore((state) => state.setUser);
   const router = useRouter();
   const {
-    register,
+    control,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormData>({ resolver: zodResolver(schema) });
+    formState: { errors, isValid, isSubmitting },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+    defaultValues:{
+      username: "",
+      password:""
+    },
+    mode: "onChange"
+  });
 
   const onSubmit = (data: FormData) => {
     const user = MOCK_USERS.find(
@@ -50,72 +73,59 @@ const LoginPage = () => {
   };
 
   return (
-    <div
-      className={twMerge(
-        "min-h-screen flex flex-col justify-center items-center bg-gray-50 dark:bg-gray-900"
-      )}
-    >
+    <section className="h-screen w-full bg-black/50 flex items-center justify-center bg-blur-lg">
       <form
         onSubmit={handleSubmit(onSubmit)}
+        noValidate
         className={twMerge(
-          "bg-white dark:bg-gray-800 p-8 rounded shadow-md w-full max-w-sm"
+          "bg-white p-8 rounded-lg shadow-lg w-full max-w-sm flex flex-col gap-3"
         )}
       >
-        <h2 className="text-2xl font-semibold mb-6 text-gray-900 dark:text-gray-100">
-          Login
-        </h2>
+        <h1 className="text-3xl text-center font-semibold mb-6 text-blue-500">
+          Welcome Back!
+        </h1>
 
-        <div className="mb-4">
-          <label className="block mb-1 text-gray-700 dark:text-gray-300">
-            Username
-          </label>
-          <input
-            {...register("username")}
-            className={twMerge(
-              "w-full px-3 py-2 border rounded focus:outline-none focus:ring-2",
-              errors.username
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-blue-400",
-              "dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-            )}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.username.message}
-            </p>
+        <Controller
+          name="username"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Username"
+              type="text"
+              placeholder="Enter your username"
+              error={errors.username?.message}
+              {...field}
+              classNames=""
+            />
           )}
-        </div>
+        />
 
-        <div className="mb-6">
-          <label className="block mb-1 text-gray-700 dark:text-gray-300">
-            Password
-          </label>
-          <input
-            type="password"
-            {...register("password")}
-            className={twMerge(
-              "w-full px-3 py-2 border rounded focus:outline-none focus:ring-2",
-              errors.password
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-blue-400",
-              "dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-            )}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
+        <Controller
+          name="password"
+          control={control}
+          render={({ field }) => (
+            <InputField
+              label="Password"
+              type="password"
+              placeholder="Enter your password"
+              error={errors.password?.message}
+              visibilityToggle={true}
+              {...field}
+              classNames=""
+            />
           )}
-        </div>
+        />
 
-        <button
+        <Button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded transition"
-        >
-          Login
-        </button>
+          label="Login"
+          buttonType="primary"
+          classNames="w-full py-3 mt-4"
+          isLoading={isSubmitting}
+          isDisabled={!isValid}
+        />
       </form>
-    </div>
+    </section>
   );
 };
 

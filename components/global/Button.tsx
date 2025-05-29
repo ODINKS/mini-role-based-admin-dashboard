@@ -74,7 +74,7 @@ const Button: React.FC<ButtonProps> = ({
       ...baseStyles,
       buttonTypeStyles[buttonType] ?? "",
       classNames,
-      isDisabled ? "bg-gray-200 cursor-not-allowed" : "",
+      isDisabled ? "opacity-50 cursor-not-allowed" : "",
     ].join(" ")
   );
 

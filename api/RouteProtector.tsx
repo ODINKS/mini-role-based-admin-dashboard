@@ -1,7 +1,8 @@
+"use client";
 import React, { ReactNode, useEffect } from "react";
-import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import useDataStore from "@/store/useDataStore";
+import { useRouter } from "next/navigation";
 
 interface Props {
   children: ReactNode;
@@ -15,7 +16,7 @@ const RouteProtector = ({ children, allowedRoles }: Props) => {
   useEffect(() => {
     if (!user || !allowedRoles.includes(user.role!)) {
       toast.error("Access denied. Please login with proper credentials.");
-      router.replace("/auth/login");
+      router.replace("/login");
     }
   }, [user, allowedRoles, router]);
 

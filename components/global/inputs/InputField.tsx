@@ -2,13 +2,11 @@
 import LetterIcon from "@/components/svgs/LetterIcon";
 import { useState } from "react";
 import { FiCheck, FiEye, FiEyeOff } from "react-icons/fi";
-
 import { twMerge } from "tailwind-merge";
 import ErrorDisplayer from "../ErrorDisplayer";
 
 interface InputFieldProps {
   label?: string;
-  // showLabel?: boolean;
   labelType?: "standard" | "collapsed";
   collasedLabelStyles?: string;
   name: string;
@@ -49,7 +47,6 @@ interface InputFieldProps {
 
 const InputField: React.FC<InputFieldProps> = ({
   label,
-  // showLabel = true,
   labelType = "standard",
   collasedLabelStyles,
   name,
@@ -84,9 +81,9 @@ const InputField: React.FC<InputFieldProps> = ({
 }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     setIsFocused(true);
-
     onFocus?.(e);
   };
 
@@ -94,6 +91,7 @@ const InputField: React.FC<InputFieldProps> = ({
     setIsFocused(false);
     onBlur?.(e);
   };
+
   const shouldShrink =
     isFocused || (typeof value === "string" && value?.length > 0);
 
@@ -117,7 +115,7 @@ const InputField: React.FC<InputFieldProps> = ({
               onInput={onInput}
               disabled={disabled}
               className={twMerge(
-                "w-6 h-6 peer cursor-pointer checked:bg-gray-60 appearance-none border border-black/50 rounded-[6px]",
+                "w-6 h-6 peer cursor-pointer checked:bg-blue-600 appearance-none border border-gray-300 rounded-[6px]",
                 classNames
               )}
             />
@@ -140,20 +138,15 @@ const InputField: React.FC<InputFieldProps> = ({
                 onFocus={onFocus}
                 onInput={onInput}
                 disabled={disabled}
-                className={`
-                      absolute left-0 top-1/2 -translate-y-1/2 w-[22px] h-[22px] rounded-full border border-gray-border shadow-sm appearance-none cursor-pointer transition-transform duration-300 ${
-                        thumbColor ? thumbColor : "bg-white"
-                      }
-                      ${value ? "translate-x-6" : "translate-x-0"}
-                    `}
+                className={`absolute left-0 top-1/2 -translate-y-1/2 w-[22px] h-[22px] rounded-full border border-gray-300 shadow-sm appearance-none cursor-pointer transition-transform duration-300 ${
+                  thumbColor ? thumbColor : "bg-white"
+                } ${value ? "translate-x-6" : "translate-x-0"}`}
               />
 
               {/* Toggle Track */}
               <label
                 htmlFor={name || id}
-                className={`
-                      block w-12 h-6 rounded-full transition-colors duration-300 cursor-pointer
-                    `}
+                className={`block w-12 h-6 rounded-full transition-colors duration-300 cursor-pointer`}
                 style={{
                   backgroundColor: value
                     ? trackColorChecked // default blue-500
@@ -197,13 +190,9 @@ const InputField: React.FC<InputFieldProps> = ({
               {/* Outer circle */}
               <div
                 className={twMerge(
-                  `
-                    w-5 h-5 rounded-full border-2 
-                    flex items-center justify-center 
-                    transition-all duration-200 ease-in-out
-                    ${value === id ? "border-blue-600" : "border-gray-400"}
-                    ${disabled ? "opacity-50 cursor-not-allowed" : ""}
-                  `,
+                  `w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all duration-200 ease-in-out ${
+                    value === id ? "border-blue-500" : "border-gray-300"
+                  } ${disabled ? "opacity-50 cursor-not-allowed" : ""}`,
                   outerRadioStyles
                 )}
               >
@@ -211,7 +200,7 @@ const InputField: React.FC<InputFieldProps> = ({
                 <div
                   className={twMerge(
                     `w-2.5 h-2.5 rounded-full transition-colors duration-200 ${
-                      value === id ? "bg-blue-600" : "bg-[#9DA4A4]"
+                      value === id ? "bg-blue-500" : "bg-gray-400"
                     }`,
                     innerRadioStyles
                   )}
@@ -249,8 +238,8 @@ const InputField: React.FC<InputFieldProps> = ({
               disabled={disabled}
               autoFocus={autoFocus}
               className={twMerge(
-                `w-full px-5 py-4 rounded-lg text-black focus:ring-1 focus:ring-primary-50 focus:outline-none focus:bg-primary-10 placeholder:text-gray-base placeholder:text-sm text-sm bg-gray-10`,
-                error ? "border border-red-base bg-red-10" : "",
+                `w-full px-5 py-4 rounded-lg text-black focus:ring-2 focus:ring-blue-500 focus:outline-none placeholder:text-gray-400 placeholder:text-sm text-sm bg-gray-100`,
+                error ? "border border-red-500 bg-red-50" : "border-gray-300",
                 classNames
               )}
               ref={ref}
@@ -289,7 +278,7 @@ const InputField: React.FC<InputFieldProps> = ({
         type !== "switch" && (
           <label
             htmlFor={name}
-            className={twMerge("block text-sm text-black-base mb-2")}
+            className={twMerge("block text-sm text-gray-900 mb-2")}
           >
             {label}
             {required && <span className="text-red-500 ml-0.5">*</span>}
@@ -302,10 +291,10 @@ const InputField: React.FC<InputFieldProps> = ({
           <label
             htmlFor={id}
             className={twMerge(
-              `absolute left-[13px] transition-all text-sm  px-1 rounded-md`,
+              `absolute left-[13px] transition-all text-sm px-1 rounded-md`,
               shouldShrink
-                ? "-top-2.5 text-black-base bg-white"
-                : "top-5 text-[#C5C5C5] !bg-inherit",
+                ? "-top-2.5 text-black bg-white"
+                : "top-5 text-gray-400 !bg-inherit",
               collasedLabelStyles
             )}
           >
