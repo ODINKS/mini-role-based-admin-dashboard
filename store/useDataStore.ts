@@ -19,18 +19,32 @@ interface Store {
   justLoggedOut: boolean;
   setUser: (user: User | null) => void;
   setPosts: (posts: Post[]) => void;
+  setDarkMode: (val: boolean) => void;
   toggleDarkMode: () => void;
-  setJustLoggedOut: (val: boolean) => void; 
+  setJustLoggedOut: (val: boolean) => void;
 }
 
 const useDataStore = create<Store>((set) => ({
   user: null,
   posts: [],
-  darkMode: false,
+  darkMode: false, // default false here
   justLoggedOut: false,
   setUser: (user) => set(() => ({ user })),
   setPosts: (posts) => set(() => ({ posts })),
-  toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+  setDarkMode: (val) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("darkMode", val.toString());
+    }
+    set(() => ({ darkMode: val }));
+  },
+  toggleDarkMode: () =>
+    set((state) => {
+      const newDarkMode = !state.darkMode;
+      if (typeof window !== "undefined") {
+        localStorage.setItem("darkMode", newDarkMode.toString());
+      }
+      return { darkMode: newDarkMode };
+    }),
   setJustLoggedOut: (val) => set(() => ({ justLoggedOut: val })),
 }));
 
