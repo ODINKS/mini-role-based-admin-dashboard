@@ -1,8 +1,20 @@
+"use client";
 import Button from "@/components/global/Button";
+import Navbar from "@/components/global/Navbar";
+import { useBreakpoint } from "@/hooks/UseBreakPoint";
+import { twMerge } from "tailwind-merge";
 
 export default function Home() {
+  const { isXsOnly } = useBreakpoint();
   return (
-    <section className="h-screen w-full bg-black/50 flex items-center justify-center bg-blur-lg">
+    <section
+      className={twMerge(
+        "h-screen w-full flex items-center justify-center bg-blur-lg bg-black/50",
+        "dark:bg-gray-900 dark:bg-opacity-90 overflow-y-auto",
+        isXsOnly ? "pt-32 pb-6" : ""
+      )}
+    >
+      <Navbar />
       <div
         className="
           w-full max-w-[400px] rounded-lg shadow-lg p-8 text-center

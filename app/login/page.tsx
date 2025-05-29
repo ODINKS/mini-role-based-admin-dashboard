@@ -10,6 +10,8 @@ import tokenManager from "@/api/tokenManager";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/global/inputs/InputField";
 import Button from "@/components/global/Button";
+import Navbar from "@/components/global/Navbar";
+import { useBreakpoint } from "@/hooks/UseBreakPoint";
 
 const schema = z.object({
   username: z
@@ -71,13 +73,16 @@ const LoginPage = () => {
     router.push("/dashboard");
   };
 
+  const { isXsOnly } = useBreakpoint();
+
   return (
     <section
       className={twMerge(
         "h-screen w-full flex items-center justify-center bg-blur-lg bg-black/50",
-        "dark:bg-gray-900 dark:bg-opacity-90"
+        "dark:bg-gray-900 dark:bg-opacity-90 overflow-y-auto", isXsOnly?"pt-32 pb-6":""
       )}
     >
+      <Navbar />
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
