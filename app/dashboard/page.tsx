@@ -59,7 +59,6 @@ const DashboardHome = () => {
     }
   }, [posts.length, setPosts, users.length]);
 
-  // Aggregate posts count per user, with username label
   const chartData = users.map((user) => {
     const count = posts.filter((post) => post.userId === user.id).length;
     return { name: user.username, postsCount: count };
@@ -111,23 +110,27 @@ const DashboardHome = () => {
         {/* Bar Chart */}
         <section className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-medium mb-4 text-gray-800">
-            Posts Count by User (Bar Chart)
+            Posts Count by User
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
+          <ResponsiveContainer width="100%" height={320}>
+            <BarChart
+              data={chartData}
+              margin={{ top: 40, right: 10, left: 10, bottom: 70 }}
+            >
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis
                 dataKey="name"
                 stroke="#374151"
                 tick={{ fill: "#374151", fontSize: 12 }}
                 interval={0}
-                angle={-45}
+                angle={-30}
                 textAnchor="end"
                 height={70}
                 label={{
                   value: "Users",
                   position: "insideBottomRight",
                   offset: -10,
+                  fontSize: 14,
                 }}
               />
               <YAxis
@@ -136,7 +139,8 @@ const DashboardHome = () => {
                   value: "Number of Posts",
                   angle: -90,
                   position: "insideLeft",
-                  offset: 10,
+                  offset: 20,
+                  fontSize: 14,
                 }}
               />
               <Tooltip />
@@ -152,20 +156,18 @@ const DashboardHome = () => {
         {/* Pie Chart */}
         <section className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-medium mb-4 text-gray-800">
-            Posts Distribution by User (Pie Chart)
+            Posts Distribution by User
           </h2>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={320}>
             <PieChart>
               <Pie
                 data={chartData}
                 dataKey="postsCount"
                 nameKey="name"
                 cx="50%"
-                cy="50%"
-                outerRadius={100}
-                label={({ name, percent }) =>
-                  `${name}: ${(percent * 100).toFixed(0)}%`
-                }
+                cy="55%"
+                outerRadius={85}
+                label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
               >
                 {chartData.map((_, index) => (
                   <Cell
@@ -174,7 +176,12 @@ const DashboardHome = () => {
                   />
                 ))}
               </Pie>
-              <Legend />
+              <Legend
+                verticalAlign="bottom"
+                align="center"
+                layout="horizontal"
+                wrapperStyle={{ marginTop: 20 }}
+              />
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
