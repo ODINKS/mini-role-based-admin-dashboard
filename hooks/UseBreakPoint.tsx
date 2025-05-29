@@ -11,6 +11,12 @@ interface BreakpointInfo {
   isLg: boolean;
   isXl: boolean;
   is2xl: boolean;
+  isXsOnly: boolean;
+  isSmOnly: boolean;
+  isMdOnly: boolean;
+  isLgOnly: boolean;
+  isXlOnly: boolean;
+  is2xlOnly: boolean;
   isMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
@@ -26,29 +32,43 @@ function getBreakpoint(width: number): Breakpoint {
 }
 
 export function useBreakpoint(): BreakpointInfo {
-  const [breakpoint, setBreakpoint] = useState<Breakpoint>("xs"); // Default on server
+  const [width, setWidth] = useState<number>(0);
+  const [breakpoint, setBreakpoint] = useState<Breakpoint>("xs");
 
   useEffect(() => {
-    const updateBreakpoint = () => {
-      setBreakpoint(getBreakpoint(window.innerWidth));
+    const update = () => {
+      const w = window.innerWidth;
+      setWidth(w);
+      setBreakpoint(getBreakpoint(w));
     };
 
-    updateBreakpoint(); // set correct value on mount
-    window.addEventListener("resize", updateBreakpoint);
-    return () => window.removeEventListener("resize", updateBreakpoint);
+    update(); // initial run
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   return {
     breakpoint,
-    isXs: breakpoint === "xs",
-    isSm: breakpoint === "sm",
-    isMd: breakpoint === "md",
-    isLg: breakpoint === "lg",
-    isXl: breakpoint === "xl",
-    is2xl: breakpoint === "2xl",
-    isMobile: breakpoint === "xs" || breakpoint === "sm",
-    isTablet: breakpoint === "md",
-    isDesktop:
-      breakpoint === "lg" || breakpoint === "xl" || breakpoint === "2xl",
+
+    // Tailwind-style min-width breakpoints
+    isXs: width >= 0,
+    isSm: width >= 640,
+    isMd: width >= 768,
+    isLg: width >= 1024,
+    isXl: width >= 1280,
+    is2xl: width >= 1536,
+
+    // "Only" ranges
+    isXsOnly: width < 640,
+    isSmOnly: width >= 640 && width < 768,
+    isMdOnly: width >= 768 && width < 1024,
+    isLgOnly: width >= 1024 && width < 1280,
+    isXlOnly: width >= 1280 && width < 1536,
+    is2xlOnly: width >= 1536,
+
+    // Convenience
+    isMobile: width < 768, // xs and sm
+    isTablet: width >= 768 && width < 1024, // md only
+    isDesktop: width >= 1024, // lg and up
   };
 }

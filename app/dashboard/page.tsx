@@ -16,6 +16,7 @@ import {
 } from "recharts";
 import { toast } from "react-toastify";
 import useDataStore from "@/store/useDataStore";
+import { useBreakpoint } from "@/hooks/UseBreakPoint";
 
 const COLORS = [
   "#3B82F6",
@@ -38,6 +39,7 @@ const DashboardHome = () => {
   const posts = useDataStore((state) => state.posts);
   const user = useDataStore((state) => state.user);
   const [users, setUsers] = useState<User[]>([]);
+  const { isXsOnly } = useBreakpoint();
 
   useEffect(() => {
     const fetchUsersAndPosts = async () => {
@@ -48,8 +50,7 @@ const DashboardHome = () => {
         ]);
         setUsers(usersRes.data);
         setPosts(postsRes.data);
-      } catch (error) {
-        console.error(error);
+      } catch {
         toast.error("Failed to fetch data");
       }
     };
@@ -65,6 +66,7 @@ const DashboardHome = () => {
   });
 
   const totalPosts = posts.length;
+  const legendMarginTop = isXsOnly ? 100 : 20;
 
   return (
     <>
@@ -72,7 +74,6 @@ const DashboardHome = () => {
         Welcome, {user?.username || "User"}
       </h1>
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
         <div className="bg-white rounded-lg shadow p-6">
           <h3 className="text-lg font-semibold mb-2 text-gray-800">
@@ -105,9 +106,7 @@ const DashboardHome = () => {
         </div>
       </div>
 
-      {/* Charts Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {/* Bar Chart */}
         <section className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-medium mb-4 text-gray-800">
             Posts Count by User
@@ -153,7 +152,6 @@ const DashboardHome = () => {
           </p>
         </section>
 
-        {/* Pie Chart */}
         <section className="bg-white rounded-lg shadow p-6">
           <h2 className="text-xl font-medium mb-4 text-gray-800">
             Posts Distribution by User (Pie Chart)
@@ -180,7 +178,7 @@ const DashboardHome = () => {
                 verticalAlign="bottom"
                 align="center"
                 layout="horizontal"
-                wrapperStyle={{ marginTop: 20 }}
+                wrapperStyle={{ marginTop: legendMarginTop }}
               />
               <Tooltip />
             </PieChart>
