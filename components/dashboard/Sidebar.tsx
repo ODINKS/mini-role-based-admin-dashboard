@@ -32,6 +32,26 @@ const Sidebar = () => {
 
   return (
     <aside className="w-64 min-h-screen bg-white shadow-md p-6 flex flex-col justify-between fixed top-0 left-0">
+      {/* Logo */}
+      <div className="flex items-center gap-2 mb-10 font-bold text-blue-600 text-xl select-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-8 w-8"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        <span>Dashlytics</span>
+      </div>
+
       {/* Navigation */}
       <nav>
         <ul className="space-y-4">
