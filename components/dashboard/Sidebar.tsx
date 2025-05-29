@@ -7,6 +7,7 @@ import {
   FaFileAlt,
   FaSignOutAlt,
   FaUserCircle,
+  FaTimes,
 } from "react-icons/fa";
 import tokenManager from "@/api/tokenManager";
 import useDataStore from "@/store/useDataStore";
@@ -68,8 +69,22 @@ const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
           "dark:bg-gray-900 dark:shadow-lg"
         )}
       >
-        {/* Logo */}
-        <div className="flex items-center gap-2 mb-6 font-bold text-blue-600 text-2xl select-none dark:text-blue-400">
+        {/* Mobile Close Button */}
+        <div className="flex items-center justify-between mb-6 md:hidden">
+          <div className="flex items-center gap-2 font-bold text-blue-600 text-2xl select-none dark:text-blue-400">
+            Nicklytics
+          </div>
+          <button
+            aria-label="Close sidebar"
+            onClick={() => setSidebarOpen(false)}
+            className="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 focus:outline-none"
+          >
+            <FaTimes size={24} />
+          </button>
+        </div>
+
+        {/* Desktop Logo */}
+        <div className="hidden md:flex items-center gap-2 mb-6 font-bold text-blue-600 text-2xl select-none dark:text-blue-400">
           <span>Nicklytics</span>
         </div>
 
