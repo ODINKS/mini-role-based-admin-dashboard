@@ -5,7 +5,6 @@ import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 import Spinner from "./Spinner";
 
-// Shared base props
 type BaseButtonProps = {
   isLoading?: boolean;
   isDisabled?: boolean;
@@ -16,7 +15,7 @@ type BaseButtonProps = {
   rightIcon?: React.ReactNode;
   type?: "button" | "submit" | "reset";
   disableHover?: boolean;
-  buttonType?: "primary" | "outline" | "onlyIcon" | "ghost";
+  buttonType?: "primary" | "outline" | "onlyIcon" | "ghost" | "destructive";
   isGray?: boolean;
 };
 
@@ -30,7 +29,6 @@ type ButtonOnlyIcon = BaseButtonProps & {
   label?: never;
 };
 
-// Final prop type
 type ButtonProps = ButtonWithLabel | ButtonOnlyIcon;
 
 const Button: React.FC<ButtonProps> = ({
@@ -53,7 +51,7 @@ const Button: React.FC<ButtonProps> = ({
 
   const hoverStyles = disableHover
     ? ""
-    : `transition ease-in-out duration-300 hover:opacity-60 hover:bg-blue-600`;
+    : `transition ease-in-out duration-300 hover:opacity-60 hover:bg-blue-600 dark:hover:bg-blue-700`;
 
   const baseStyles = [
     `flex justify-center text-sm items-center gap-2 rounded-lg border font-semibold w-full py-3 px-4 cursor-pointer duration-300 ease-in-out`,
@@ -61,12 +59,16 @@ const Button: React.FC<ButtonProps> = ({
   ];
 
   const buttonTypeStyles: Record<string, string> = {
-    primary: "bg-blue-500 text-white border-transparent hover:bg-blue-600",
+    primary:
+      "bg-blue-500 text-white border-transparent hover:bg-blue-600 dark:hover:bg-blue-700",
     outline:
-      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem] hover:bg-blue-100 dark:hover:bg-blue-700",
+      "bg-transparent text-blue-500 border border-blue-500 rounded-[0.93rem] hover:bg-blue-100 dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-700",
     ghost:
-      "bg-transparent text-blue-500 w-auto border-transparent !p-0 hover:bg-blue-100 dark:hover:bg-blue-700",
-    onlyIcon: "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent",
+      "bg-transparent text-blue-500 w-auto border-transparent !p-0 hover:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-700",
+    destructive:
+      "bg-red-600 text-white border-transparent hover:bg-red-700 dark:hover:bg-red-800",
+    onlyIcon:
+      "!w-fit !h-fit bg-transparent !p-0 sm:!p-0 border-transparent hover:bg-blue-100 dark:hover:bg-blue-700",
   };
 
   const mergedClassNames = twMerge(
@@ -74,7 +76,7 @@ const Button: React.FC<ButtonProps> = ({
       ...baseStyles,
       buttonTypeStyles[buttonType] ?? "",
       classNames,
-      isDisabled ? "opacity-50 cursor-not-allowed" : "",
+      shouldDisable ? "opacity-50 cursor-not-allowed" : "",
     ].join(" ")
   );
 
