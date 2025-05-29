@@ -13,7 +13,7 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <RouteProtector allowedRoles={["admin", "editor"]}>
-      <div className="flex min-h-screen bg-gray-100 text-gray-900">
+      <div className="flex min-h-screen bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-200">
         <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
         <div className="flex flex-col flex-1 ml-0 md:ml-64">
           <DashboardHeader setSidebarOpen={setSidebarOpen} />

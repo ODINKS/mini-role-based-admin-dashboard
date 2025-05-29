@@ -70,45 +70,52 @@ const DashboardHome = () => {
 
   return (
     <>
-      <h1 className="text-4xl font-bold mb-6">
+      <h1 className="text-4xl font-bold mb-6 dark:text-gray-200">
         Welcome, {user?.username || "User"}
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+        <div className="bg-white rounded-lg shadow p-6 dark:bg-gray-800">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
             Total Posts
           </h3>
-          <p className="text-3xl font-bold text-blue-600">{totalPosts}</p>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+            {totalPosts}
+          </p>
+          <p className="text-gray-500 mt-1 text-sm dark:text-gray-400">
             Total number of posts created in the system.
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+        <div className="bg-white rounded-lg shadow p-6 dark:bg-gray-800">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
             Unique Users
           </h3>
-          <p className="text-3xl font-bold text-green-600">{users.length}</p>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+            {users.length}
+          </p>
+          <p className="text-gray-500 mt-1 text-sm dark:text-gray-400">
             Number of distinct users who have created posts.
           </p>
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <h3 className="text-lg font-semibold mb-2 text-gray-800">
+        <div className="bg-white rounded-lg shadow p-6 dark:bg-gray-800">
+          <h3 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">
             Avg Posts/User
           </h3>
-          <p className="text-3xl font-bold text-yellow-500">
+          <p className="text-3xl font-bold text-yellow-500 dark:text-yellow-400">
             {(totalPosts / users.length).toFixed(2)}
           </p>
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-gray-500 mt-1 text-sm dark:text-gray-400">
             Average posts created by each user.
           </p>
         </div>
       </div>
 
+      {/* You could use InputField or Button if you have filters or controls here */}
+      {/* Example: <InputField label="Filter posts" /> */}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-medium mb-4 text-gray-800">
+        <section className="bg-white rounded-lg shadow p-6 dark:bg-gray-800">
+          <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-200">
             Posts Count by User
           </h2>
           <ResponsiveContainer width="100%" height={320}>
@@ -146,14 +153,14 @@ const DashboardHome = () => {
               <Bar dataKey="postsCount" fill="#3B82F6" />
             </BarChart>
           </ResponsiveContainer>
-          <p className="mt-3 text-gray-500 text-sm">
+          <p className="mt-3 text-gray-500 text-sm dark:text-gray-400">
             This bar chart shows how many posts each user has created. Useful
             for identifying top contributors.
           </p>
         </section>
 
-        <section className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-medium mb-4 text-gray-800">
+        <section className="bg-white rounded-lg shadow p-6 dark:bg-gray-800">
+          <h2 className="text-xl font-medium mb-4 text-gray-800 dark:text-gray-200">
             Posts Distribution by User (Pie Chart)
           </h2>
           <ResponsiveContainer width="100%" height={320}>
@@ -178,12 +185,13 @@ const DashboardHome = () => {
                 verticalAlign="bottom"
                 align="center"
                 layout="horizontal"
-                wrapperStyle={{ marginTop: legendMarginTop }}
+                wrapperStyle={{ marginTop: legendMarginTop, color: "inherit" }}
               />
+
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
-          <p className="mt-3 text-gray-500 text-sm">
+          <p className="mt-3 text-gray-500 text-sm dark:text-gray-400">
             The pie chart represents the percentage of total posts contributed
             by each user.
           </p>

@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import InputField from "@/components/global/inputs/InputField";
 import Button from "@/components/global/Button";
 
-// Zod validation schema with updated password rules
 const schema = z.object({
   username: z
     .string()
@@ -46,11 +45,11 @@ const LoginPage = () => {
     formState: { errors, isValid, isSubmitting },
   } = useForm<FormData>({
     resolver: zodResolver(schema),
-    defaultValues:{
+    defaultValues: {
       username: "",
-      password:""
+      password: "",
     },
-    mode: "onChange"
+    mode: "onChange",
   });
 
   const onSubmit = (data: FormData) => {
@@ -73,15 +72,22 @@ const LoginPage = () => {
   };
 
   return (
-    <section className="h-screen w-full bg-black/50 flex items-center justify-center bg-blur-lg">
+    <section
+      className={twMerge(
+        "h-screen w-full flex items-center justify-center bg-blur-lg bg-black/50",
+        "dark:bg-gray-900 dark:bg-opacity-90"
+      )}
+    >
       <form
         onSubmit={handleSubmit(onSubmit)}
         noValidate
         className={twMerge(
-          "bg-white p-8 rounded-lg shadow-lg w-full max-w-sm flex flex-col gap-3"
+          "w-full max-w-sm flex flex-col gap-3 rounded-lg p-8 shadow-lg",
+          "bg-white text-black",
+          "dark:bg-gray-800 dark:text-gray-200"
         )}
       >
-        <h1 className="text-3xl text-center font-semibold mb-6 text-blue-500">
+        <h1 className="mb-6 text-center text-3xl font-semibold text-blue-500">
           Welcome Back!
         </h1>
 
@@ -120,7 +126,7 @@ const LoginPage = () => {
           type="submit"
           label="Login"
           buttonType="primary"
-          classNames="w-full py-3 mt-4"
+          classNames="mt-4 w-full py-3"
           isLoading={isSubmitting}
           isDisabled={!isValid}
         />
