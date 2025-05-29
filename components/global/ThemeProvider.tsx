@@ -10,7 +10,7 @@ const ThemeProvider = () => {
   useEffect(() => {
     const storedDarkMode = localStorage.getItem("darkMode");
     if (storedDarkMode === "true") {
-      useDataStore.getState().toggleDarkMode(); // or setUser({darkMode:true}) if you have setter
+      useDataStore.getState().toggleDarkMode(); 
     }
     setHydrated(true);
   }, []);
