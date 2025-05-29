@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import {
   BarChart,
@@ -26,42 +26,44 @@ const COLORS = [
   "#EC4899",
 ];
 
+type User = {
+  id: number;
+  name: string;
+  username: string;
+  email: string;
+};
+
 const DashboardHome = () => {
   const setPosts = useDataStore((state) => state.setPosts);
   const posts = useDataStore((state) => state.posts);
   const user = useDataStore((state) => state.user);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUsersAndPosts = async () => {
       try {
-        const response = await axios.get(
-          "https://jsonplaceholder.typicode.com/posts"
-        );
-        setPosts(response.data);
+        const [usersRes, postsRes] = await Promise.all([
+          axios.get("https://jsonplaceholder.typicode.com/users"),
+          axios.get("https://jsonplaceholder.typicode.com/posts"),
+        ]);
+        setUsers(usersRes.data);
+        setPosts(postsRes.data);
       } catch (error) {
         console.error(error);
-        toast.error("Failed to fetch posts data");
+        toast.error("Failed to fetch data");
       }
     };
 
-    if (posts.length === 0) {
-      fetchPosts();
+    if (posts.length === 0 || users.length === 0) {
+      fetchUsersAndPosts();
     }
-  }, [posts.length, setPosts]);
+  }, [posts.length, setPosts, users.length]);
 
-  // Aggregate posts by userId
-  const chartData = posts.reduce<{ userId: number; postsCount: number }[]>(
-    (acc, post) => {
-      const existing = acc.find((item) => item.userId === post.userId);
-      if (existing) {
-        existing.postsCount += 1;
-      } else {
-        acc.push({ userId: post.userId, postsCount: 1 });
-      }
-      return acc;
-    },
-    []
-  );
+  // Aggregate posts count per user, with username label
+  const chartData = users.map((user) => {
+    const count = posts.filter((post) => post.userId === user.id).length;
+    return { name: user.username, postsCount: count };
+  });
 
   const totalPosts = posts.length;
 
@@ -86,9 +88,7 @@ const DashboardHome = () => {
           <h3 className="text-lg font-semibold mb-2 text-gray-800">
             Unique Users
           </h3>
-          <p className="text-3xl font-bold text-green-600">
-            {chartData.length}
-          </p>
+          <p className="text-3xl font-bold text-green-600">{users.length}</p>
           <p className="text-gray-500 mt-1 text-sm">
             Number of distinct users who have created posts.
           </p>
@@ -98,7 +98,7 @@ const DashboardHome = () => {
             Avg Posts/User
           </h3>
           <p className="text-3xl font-bold text-yellow-500">
-            {(totalPosts / chartData.length).toFixed(2)}
+            {(totalPosts / users.length).toFixed(2)}
           </p>
           <p className="text-gray-500 mt-1 text-sm">
             Average posts created by each user.
@@ -117,13 +117,17 @@ const DashboardHome = () => {
             <BarChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
               <XAxis
-                dataKey="userId"
+                dataKey="name"
                 stroke="#374151"
-                tick={{ fill: "#374151" }}
+                tick={{ fill: "#374151", fontSize: 12 }}
+                interval={0}
+                angle={-45}
+                textAnchor="end"
+                height={70}
                 label={{
-                  value: "User ID",
+                  value: "Users",
                   position: "insideBottomRight",
-                  offset: -5,
+                  offset: -10,
                 }}
               />
               <YAxis
@@ -155,7 +159,7 @@ const DashboardHome = () => {
               <Pie
                 data={chartData}
                 dataKey="postsCount"
-                nameKey="userId"
+                nameKey="name"
                 cx="50%"
                 cy="50%"
                 outerRadius={100}

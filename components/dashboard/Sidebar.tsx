@@ -1,23 +1,42 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { FaChartBar, FaFileAlt, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaChartBar,
+  FaFileAlt,
+  FaSignOutAlt,
+  FaUserCircle,
+} from "react-icons/fa";
 import tokenManager from "@/api/tokenManager";
 import useDataStore from "@/store/useDataStore";
 import { useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
-const Sidebar = () => {
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ sidebarOpen, setSidebarOpen }) => {
   const user = useDataStore((state) => state.user);
   const router = useRouter();
   const pathname = usePathname();
   const [showLogoutDropdown, setShowLogoutDropdown] = useState(false);
+  const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+
+  useEffect(() => {
+    if (setSidebarOpen) {
+      setSidebarOpen(false);
+    }
+  }, [pathname, setSidebarOpen]);
 
   if (!user) return null;
 
   const handleLogout = () => {
     tokenManager.removeUser();
     useDataStore.getState().setUser(null);
+    useDataStore.getState().setJustLoggedOut(true);
     setShowLogoutDropdown(false);
     router.push("/login");
     import("react-toastify").then(({ toast }) => {
@@ -31,83 +50,125 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 min-h-screen bg-white shadow-md p-6 flex flex-col justify-between fixed top-0 left-0">
-      {/* Logo */}
-      <div className="flex items-center gap-2 mb-10 font-bold text-blue-600 text-xl select-none">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-8 w-8"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-          aria-hidden="true"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M12 4v16m8-8H4"
-          />
-        </svg>
-        <span>Dashlytics</span>
-      </div>
-
-      {/* Navigation */}
-      <nav>
-        <ul className="space-y-4">
-          {navItems.map(({ href, label, icon }) => {
-            const isActive = pathname === href;
-            return (
-              <li key={href}>
-                <Link
-                  href={href}
-                  className={`flex items-center gap-3 text-gray-700 hover:text-blue-600 ${
-                    isActive ? "font-semibold text-blue-600" : ""
-                  }`}
-                >
-                  {icon} {label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-
-      {/* User info and logout */}
-      <div className="relative mt-6 flex items-center gap-3 border-t border-gray-200 pt-4">
-        {/* Dummy circular profile image */}
-        <div className="w-12 h-12 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold text-lg uppercase">
-          {user.username?.charAt(0) || "U"}
-        </div>
-
-        {/* User info */}
-        <div className="flex flex-col flex-grow">
-          <span className="text-gray-900 font-semibold">{user.username}</span>
-          <span className="text-gray-500 text-sm">{user.role}</span>
-        </div>
-
-        {/* Logout icon */}
-        <button
-          onClick={() => setShowLogoutDropdown((prev) => !prev)}
-          className="text-gray-700 hover:text-red-600 focus:outline-none"
-          aria-label="Toggle logout menu"
-        >
-          <FaSignOutAlt size={20} />
-        </button>
-
-        {/* Logout dropdown */}
-        {showLogoutDropdown && (
-          <div className="absolute bottom-16 right-6 bg-white border border-gray-300 rounded shadow-md w-32 z-10">
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-4 py-2 hover:bg-red-600 hover:text-white transition"
-            >
-              Logout
-            </button>
-          </div>
+    <>
+      {/* Overlay */}
+      <div
+        className={twMerge(
+          "fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden",
+          sidebarOpen ? "block" : "hidden"
         )}
-      </div>
-    </aside>
+        onClick={() => setSidebarOpen(false)}
+      />
+
+      {/* Sidebar */}
+      <aside
+        className={twMerge(
+          "fixed top-0 left-0 bottom-0 w-64 bg-white shadow-md p-6 flex flex-col z-50 transform transition-transform duration-300 md:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        {/* Logo */}
+        <div className="flex items-center gap-2 mb-6 font-bold text-blue-600 text-2xl select-none">
+          <span>Nicklytics</span>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1">
+          <ul className="space-y-6 mt-4">
+            {navItems.map(({ href, label, icon }) => {
+              const isActive = pathname === href;
+              return (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className={twMerge(
+                      "flex items-center gap-3 text-gray-700 hover:text-blue-600",
+                      isActive ? "font-semibold text-blue-600" : ""
+                    )}
+                  >
+                    {icon} {label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
+        {/* Profile & Logout */}
+        <div className="mt-6 border-t border-gray-200 pt-4 flex items-center justify-between relative">
+          <button
+            onClick={() => setShowProfileDropdown((prev) => !prev)}
+            className="flex items-center gap-3 focus:outline-none"
+            aria-label="Toggle profile menu"
+          >
+            <FaUserCircle size={36} className="text-blue-500" />
+            <div className="flex flex-col flex-grow text-left truncate">
+              <span className="text-gray-900 font-semibold truncate">
+                {user.username}
+              </span>
+              <span className="text-gray-500 text-sm truncate">
+                {user.role}
+              </span>
+            </div>
+          </button>
+
+          {/* Logout icon toggles dropdown only */}
+          <button
+            onClick={() => setShowLogoutDropdown((prev) => !prev)}
+            className="text-gray-700 hover:text-red-600 focus:outline-none"
+            aria-label="Toggle logout menu"
+          >
+            <FaSignOutAlt size={20} />
+          </button>
+
+          {/* Logout dropdown: logout happens only on button click here */}
+          {showLogoutDropdown && (
+            <div
+              className="absolute bottom-full right-0 mb-4 bg-white border border-gray-300 rounded shadow-md w-32 z-50"
+              style={{ transform: "translate(40%, 40%)" }}
+            >
+              <button
+                onClick={handleLogout}
+                className="w-full text-left px-4 py-2 hover:bg-red-600 hover:text-white transition"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+
+          {/* Profile dropdown */}
+          {showProfileDropdown && (
+            <div className="absolute left-0 bottom-full mb-16 w-full bg-white border border-gray-300 rounded shadow-md p-4 z-50">
+              <div className="mb-3">
+                <label className="block text-gray-700 text-sm mb-1">
+                  Username
+                </label>
+                <input
+                  type="text"
+                  defaultValue={user.username}
+                  className="w-full px-3 py-2 border border-gray-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700 text-sm mb-1">Role</label>
+                <input
+                  type="text"
+                  defaultValue={user.role ?? ""}
+                  readOnly
+                  className="w-full px-3 py-2 border border-gray-300 rounded bg-gray-100 cursor-not-allowed"
+                />
+              </div>
+              <button
+                className="w-full py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                onClick={() => setShowProfileDropdown(false)}
+              >
+                Save Changes
+              </button>
+            </div>
+          )}
+        </div>
+      </aside>
+    </>
   );
 };
 
