@@ -13,7 +13,7 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
 }) => {
-  if (totalPages <= 1) return null; // no pagination needed
+  if (totalPages <= 1) return null;
 
   const pages = [];
 
@@ -36,8 +36,8 @@ const Pagination: React.FC<PaginationProps> = ({
         className={twMerge(
           "px-3 py-1 rounded-md font-semibold transition",
           currentPage === 1
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            ? "text-gray-400 cursor-not-allowed dark:text-gray-600"
+            : "text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-blue-400 dark:hover:bg-blue-700 dark:focus:ring-blue-500"
         )}
         aria-label="Previous page"
       >
@@ -49,12 +49,14 @@ const Pagination: React.FC<PaginationProps> = ({
         <>
           <button
             onClick={() => onPageChange(1)}
-            className="px-3 py-1 rounded-md font-semibold text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="px-3 py-1 rounded-md font-semibold text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-blue-400 dark:hover:bg-blue-700 dark:focus:ring-blue-500"
             aria-label="Go to page 1"
           >
             1
           </button>
-          {startPage > 2 && <span className="px-2 py-1">…</span>}
+          {startPage > 2 && (
+            <span className="px-2 py-1 dark:text-gray-400">…</span>
+          )}
         </>
       )}
 
@@ -66,8 +68,8 @@ const Pagination: React.FC<PaginationProps> = ({
           className={twMerge(
             "px-3 py-1 rounded-md font-semibold transition focus:outline-none focus:ring-2",
             page === currentPage
-              ? "bg-blue-600 text-white cursor-default"
-              : "text-blue-600 hover:bg-blue-100 focus:ring-blue-400"
+              ? "bg-blue-600 text-white cursor-default dark:bg-blue-500"
+              : "text-blue-600 hover:bg-blue-100 focus:ring-blue-400 dark:text-blue-400 dark:hover:bg-blue-700 dark:focus:ring-blue-500"
           )}
           aria-current={page === currentPage ? "page" : undefined}
           aria-label={`Go to page ${page}`}
@@ -79,10 +81,12 @@ const Pagination: React.FC<PaginationProps> = ({
       {/* Last page */}
       {endPage < totalPages && (
         <>
-          {endPage < totalPages - 1 && <span className="px-2 py-1">…</span>}
+          {endPage < totalPages - 1 && (
+            <span className="px-2 py-1 dark:text-gray-400">…</span>
+          )}
           <button
             onClick={() => onPageChange(totalPages)}
-            className="px-3 py-1 rounded-md font-semibold text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            className="px-3 py-1 rounded-md font-semibold text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-blue-400 dark:hover:bg-blue-700 dark:focus:ring-blue-500"
             aria-label={`Go to page ${totalPages}`}
           >
             {totalPages}
@@ -97,8 +101,8 @@ const Pagination: React.FC<PaginationProps> = ({
         className={twMerge(
           "px-3 py-1 rounded-md font-semibold transition",
           currentPage === totalPages
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            ? "text-gray-400 cursor-not-allowed dark:text-gray-600"
+            : "text-blue-600 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:text-blue-400 dark:hover:bg-blue-700 dark:focus:ring-blue-500"
         )}
         aria-label="Next page"
       >
